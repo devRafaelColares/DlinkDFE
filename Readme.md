@@ -1,4 +1,4 @@
-# Requisitos para Desenvolvimento do Sistema Dlink DFE
+# Frontend - Sistema Dlink DFE
 
 O objetivo deste projeto é desenvolver o frontend do sistema Dlink DFE. Este sistema irá fornecer aos usuários uma interface amigável para gerenciar documentos fiscais. A seguir, estão os requisitos detalhados para o desenvolvimento da aplicação.
 

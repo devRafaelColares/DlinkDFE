@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLINK-DFE", "DlinkDFE.Web\DLINK-DFE.csproj", "{DFC2D880-F8FD-49A6-B317-365EE82D51F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DlinkDFE.Web", "DlinkDFE.Web\DlinkDFE.Web.csproj", "{AD296888-C5B5-42DC-B277-D62B1F0F8C09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DFC2D880-F8FD-49A6-B317-365EE82D51F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFC2D880-F8FD-49A6-B317-365EE82D51F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFC2D880-F8FD-49A6-B317-365EE82D51F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFC2D880-F8FD-49A6-B317-365EE82D51F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD296888-C5B5-42DC-B277-D62B1F0F8C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD296888-C5B5-42DC-B277-D62B1F0F8C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD296888-C5B5-42DC-B277-D62B1F0F8C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD296888-C5B5-42DC-B277-D62B1F0F8C09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
