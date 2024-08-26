@@ -2,37 +2,39 @@
 
 <MudThemeProvider @ref="_mudThemeProvider" />
 <MudSnackbarProvider />
-<MudDialogProvider />
+<MudPopoverProvider />
 
 <MudLayout>
-<MudAppBar Color="Color.Primary">
-<MudIconButton Icon="@Icons.Material.Filled.Menu"
-OnClick="ToggleDrawer"
-Color="Color.Inherit"
-Edge="Edge.Start" />
-LOGOMARCA
+    <MudAppBar Color="Color.Primary">
+        <MudIconButton 
+            Icon="@Icons.Material.Filled.Menu"
+            OnClick="ToggleDrawer"
+            Color="Color.Inherit"
+            Edge="Edge.Start" />
+            LOGOMARCA
 
-<MudSpacer />
-<MudChip T="string">
-<AvatarContent>
-<MudAvatar>
-<MudImage Src="images/toiletvisit.jpg"></MudImage>
-</MudAvatar>
-</AvatarContent>
-<ChildContent>Usuário</ChildContent>
-</MudChip>
+        <MudSpacer />
 
-<MudIconButton Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Inherit" />
-<MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
-</MudAppBar>
+        <MudChip T="string">
+                <AvatarContent>
+                    <MudAvatar>
+                        <MudImage Src="images/toiletvisit.jpg"></MudImage>
+                    </MudAvatar>
+                </AvatarContent>
+            <ChildContent>Usuário</ChildContent>
+        </MudChip>
 
-<MudDrawer @bind-Open="@_isDrawerOpened" Elevation="2" Variant="DrawerVariant.Temporary">
-<NavMenu OnMenuItemClick="CloseDrawer" />
-</MudDrawer>
+        <MudIconButton Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Inherit" />
+        <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
+    </MudAppBar>
 
-<MudMainContent>
-<MudContainer>
-@Body
-</MudContainer>
-</MudMainContent>
+    <MudDrawer @bind-Open="@_isDrawerOpened" Elevation="2" Variant="DrawerVariant.Persistent">
+        <NavMenu OnMenuItemClick="CloseDrawer" />
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer>
+            @Body
+        </MudContainer>
+    </MudMainContent>
 </MudLayout>
