@@ -4,66 +4,78 @@
 
 <MudContainer Class="pt-8" Width="100%">
     <MudGrid>
-        <MudGrid>
-            <MudItem xs="8">
-                <MudTextField 
-                    @bind-Value="_searchString" 
-                    Placeholder="Pesquisar..." 
-                    Adornment="Adornment.Start"
-                    AdornmentIcon="@Icons.Material.Filled.Search" 
-                    Class="mt-0">
-                </MudTextField>
-            </MudItem>
-            <MudItem xs="4" class="d-flex justify-end">
-                <MudButton 
-                    Variant="Variant.Filled" 
-                    Color="Color.Primary" 
-                    OnClick="ApplyFilters">Aplicar Filtros
-                </MudButton>
-            </MudItem>
-        </MudGrid>
+        <MudItem xs="8">
+            <MudTextField 
+                @bind-Value="_searchString" 
+                Placeholder="Pesquisar..." 
+                Adornment="Adornment.Start"
+                AdornmentIcon="@Icons.Material.Filled.Search" 
+                Class="mt-0">
+            </MudTextField>
+        </MudItem>
 
-        <MudDataGrid Class="pa-2"
-            T="Documento" 
-            Items="@FilteredDocumentos" 
-            MultiSelection="true" 
-            Filterable="true" 
-            QuickFilter="@_quickFilter"
-            SortMode="SortMode.Multiple"
-            Style="width: 100%; table-layout: auto;">
-            
-            <Columns>
-                <SelectColumn T="Documento" />
-                <PropertyColumn Property="x => x.Status" Title="Status" />
-                <PropertyColumn Property="x => x.Modelo" Title="Modelo" />
-                <PropertyColumn Property="x => x.Numero" Title="Número" />
-                <PropertyColumn Property="x => x.Serie" Title="Série" />
-                <PropertyColumn Property="x => x.Emissao" Title="Emissão" />
-                <PropertyColumn Property="x => x.Destinatario" Title="Destinatário" />
-                <PropertyColumn Property="x => x.Valor" Title="Valor" />
+        <MudItem xs="4">
+            <MudSelect T="string" 
+                       Label="Filtrar Status" 
+                       MultiSelection="true" 
+                       SelectedValues="@_selectedStatuses" 
+                       SelectedValuesChanged="@(values => _selectedStatuses = new HashSet<string>(values))">
+                @foreach (var status in _statusOptions)
+                {
+                    <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
 
-                <TemplateColumn Title="Ações" Icon="@Icons.Material.Filled.MoreVert">
-                    <CellTemplate>
-                        <MudMenu  
-                            Icon="@Icons.Material.Filled.MoreVert"
-                            ActivationEvent="@MouseEvent.MouseOver" 
-                            AnchorOrigin="Origin.BottomCenter" 
-                            TransformOrigin="Origin.TopCenter">
-                            <ChildContent>
-                                <MudMenuItem Icon="@Icons.Material.Filled.Print">Imprimir</MudMenuItem>
-                                <MudMenuItem Icon="@Icons.Material.Filled.Archive">Arquivo XML</MudMenuItem>
-                                <MudMenuItem Icon="@Icons.Material.Filled.Send">Enviar</MudMenuItem>
-                                <MudMenuItem OnClick="ShowCancelConfirmation" Icon="@Icons.Material.Filled.DeleteForever">Cancelar</MudMenuItem>
-                            </ChildContent>
-                        </MudMenu>
-                    </CellTemplate>
-                </TemplateColumn>
-            </Columns>
-            <PagerContent>
-                <MudDataGridPager T="Documento" />
-            </PagerContent>
-        </MudDataGrid>
+        <MudItem xs="4" class="d-flex justify-end">
+            <MudButton 
+                Variant="Variant.Filled" 
+                Color="Color.Primary" 
+                OnClick="ApplyFilters">Aplicar Filtros
+            </MudButton>
+        </MudItem>
     </MudGrid>
+
+    <MudDataGrid Class="pa-2"
+                 T="Documento" 
+                 Items="@FilteredDocumentos" 
+                 MultiSelection="true" 
+                 Filterable="true" 
+                 QuickFilter="@_quickFilter"
+                 SortMode="SortMode.Multiple"
+                 Style="width: 100%; table-layout: auto;">
+        
+        <Columns>
+            <SelectColumn T="Documento" />
+            <PropertyColumn Property="x => x.Status" Title="Status" />
+            <PropertyColumn Property="x => x.Modelo" Title="Modelo" />
+            <PropertyColumn Property="x => x.Numero" Title="Número" />
+            <PropertyColumn Property="x => x.Serie" Title="Série" />
+            <PropertyColumn Property="x => x.Emissao" Title="Emissão" />
+            <PropertyColumn Property="x => x.Destinatario" Title="Destinatário" />
+            <PropertyColumn Property="x => x.Valor" Title="Valor" />
+
+            <TemplateColumn Title="Ações" Icon="@Icons.Material.Filled.MoreVert">
+                <CellTemplate>
+                    <MudMenu  
+                        Icon="@Icons.Material.Filled.MoreVert"
+                        ActivationEvent="@MouseEvent.MouseOver" 
+                        AnchorOrigin="Origin.BottomCenter" 
+                        TransformOrigin="Origin.TopCenter">
+                        <ChildContent>
+                            <MudMenuItem Icon="@Icons.Material.Filled.Print">Imprimir</MudMenuItem>
+                            <MudMenuItem Icon="@Icons.Material.Filled.Archive">Arquivo XML</MudMenuItem>
+                            <MudMenuItem Icon="@Icons.Material.Filled.Send">Enviar</MudMenuItem>
+                            <MudMenuItem OnClick="ShowCancelConfirmation" Icon="@Icons.Material.Filled.DeleteForever">Cancelar</MudMenuItem>
+                        </ChildContent>
+                    </MudMenu>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="Documento" />
+        </PagerContent>
+    </MudDataGrid>
 </MudContainer>
 
 <MudMessageBox @ref="_mudMessageBox" Title="Atenção" CancelText="Desistir">

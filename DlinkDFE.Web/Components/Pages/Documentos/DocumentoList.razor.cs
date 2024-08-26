@@ -3,7 +3,7 @@ using DlinkDFE.Web.Services;
 using MudBlazor;
 using DlinkDFE.Web.MockData;
 
-namespace DlinkDFE.Web.Components.Pages.DocumentoList
+namespace DlinkDFE.Web.Components.Pages.Documentos
 {
     public class DocumentoListBase : ComponentBase
     {
@@ -11,26 +11,15 @@ namespace DlinkDFE.Web.Components.Pages.DocumentoList
         protected DocumentoService DocumentoService { get; set; }
 
         protected IEnumerable<Documento> DocumentosList = new List<Documento>();
-        protected IEnumerable<Documento> FilteredDocumentos => DocumentosList.Where(_quickFilter);
-        protected string _searchString;
+        protected IEnumerable<Documento> FilteredDocumentos => ApplyFilter(DocumentosList);
 
+        protected string _searchString;
+        protected HashSet<string> _selectedStatuses = new HashSet<string>();
         protected MudMessageBox _mudMessageBox;
 
-        protected Func<Documento, bool> _quickFilter => x =>
+        public string[] _statusOptions = new string[]
         {
-            if (string.IsNullOrWhiteSpace(_searchString))
-                return true;
-
-            if (x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            if (x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            if (x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            return false;
+            "Autorizado", "Pendente", "Inutilizado", "Cancelado", "Rejeitado"
         };
 
         protected override Task OnInitializedAsync()
@@ -44,6 +33,25 @@ namespace DlinkDFE.Web.Components.Pages.DocumentoList
             StateHasChanged(); // Atualiza a UI para aplicar filtros
         }
 
+        private IEnumerable<Documento> ApplyFilter(IEnumerable<Documento> documentos)
+        {
+            var filtered = documentos;
+
+            if (!string.IsNullOrWhiteSpace(_searchString))
+            {
+                filtered = filtered.Where(x => x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                            || x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                            || x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (_selectedStatuses.Any())
+            {
+                filtered = filtered.Where(x => _selectedStatuses.Contains(x.Status));
+            }
+
+            return filtered;
+        }
+
         protected async Task ShowCancelConfirmation()
         {
             bool? result = await _mudMessageBox.ShowAsync();
@@ -52,11 +60,8 @@ namespace DlinkDFE.Web.Components.Pages.DocumentoList
                 // Lógica para cancelar o documento
                 // Pode incluir uma chamada para o serviço DocumentoService para realizar o cancelamento
                 // e/ou atualizar a lista DocumentosList
-                // Atualize o estado para refletir a mudança
-            }
-            else
-            {
-                // Lógica para quando o cancelamento é abortado pelo usuário
+                DocumentosList = DocumentosList.Where(d => d.Status != "Cancelado").ToList();
+                ApplyFilters();
             }
         }
     }
