@@ -1,0 +1,44 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider 
+@ref="_mudThemeProvider" />
+<MudSnackbarProvider />
+<MudDialogProvider />
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+         OnClick="ToggleDrawer"
+          Color="Color.Inherit"
+          Edge="Edge.Start"/>
+            LOGOMARCA
+        <MudSpacer />
+
+        <MudChip T="string">
+            <AvatarContent>
+                <MudAvatar>
+                    <MudImage Src="images/toiletvisit.jpg"></MudImage>
+                </MudAvatar>
+            </AvatarContent>
+            <ChildContent>Usuário</ChildContent>
+        </MudChip>
+
+
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_isDrawerOpened">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer>
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _isDrawerOpened = false;
+    private MudThemeProvider _mudThemeProvider = null!;
+
+    private void ToggleDrawer()
+        => _isDrawerOpened = !_isDrawerOpened;
+}
