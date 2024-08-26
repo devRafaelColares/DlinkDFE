@@ -3,6 +3,7 @@
 <MudThemeProvider @ref="_mudThemeProvider" />
 <MudSnackbarProvider />
 <MudPopoverProvider />
+<MudDialogProvider />
 
 <MudLayout>
     <MudAppBar Color="Color.Primary">
@@ -14,16 +15,27 @@
             LOGOMARCA
 
         <MudSpacer />
+<MudChip T="string">
+    <AvatarContent>
+        <MudMenu ActivationEvent="MouseEvent.MouseOver">
+            <ChildContent>
+                <MudMenuItem>Perfil</MudMenuItem>
+                <MudMenuItem>Configurações</MudMenuItem>
+            </ChildContent>
+            
+            <ActivatorContent>
+                <MudAvatar>
+                    <MudImage Src="images/toiletvisit.jpg"></MudImage>
+                </MudAvatar>
+                <p>Usuário</p>
 
-        <MudChip T="string">
-                <AvatarContent>
-                    <MudAvatar>
-                        <MudImage Src="images/toiletvisit.jpg"></MudImage>
-                    </MudAvatar>
-                </AvatarContent>
-            <ChildContent>Usuário</ChildContent>
-        </MudChip>
+            </ActivatorContent>
+        </MudMenu>
+    </AvatarContent>
 
+</MudChip>
+
+            
         <MudIconButton Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Inherit" />
         <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
     </MudAppBar>

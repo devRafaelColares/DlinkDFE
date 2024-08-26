@@ -1,10 +1,8 @@
 ﻿@page "/documentos"
 
-@using DlinkDFE.Web.Services
-@using MudBlazor
-@inject DocumentoService DocumentoService
+@inherits DocumentoListBase
 
-<MudContainer Class="pa-8" Width="100%">
+<MudContainer Class="pt-8" Width="100%">
     <MudGrid>
         <MudGrid>
             <MudItem xs="8">
@@ -46,10 +44,18 @@
 
                 <TemplateColumn Title="Ações" Icon="@Icons.Material.Filled.MoreVert">
                     <CellTemplate>
-                        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" 
-                                    Color="Color.Primary" 
-                                    @onclick="OnMoreVertClicked">
-                        </MudIconButton>
+                        <MudMenu  
+                            Icon="@Icons.Material.Filled.MoreVert"
+                            ActivationEvent="@MouseEvent.MouseOver" 
+                            AnchorOrigin="Origin.BottomCenter" 
+                            TransformOrigin="Origin.TopCenter">
+                            <ChildContent>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Print">Imprimir</MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Archive">Arquivo XML</MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Send">Enviar</MudMenuItem>
+                                <MudMenuItem OnClick="ShowCancelConfirmation" Icon="@Icons.Material.Filled.DeleteForever">Cancelar</MudMenuItem>
+                            </ChildContent>
+                        </MudMenu>
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
@@ -60,42 +66,11 @@
     </MudGrid>
 </MudContainer>
 
-@code {
-    private IEnumerable<Documento> DocumentosList = new List<Documento>();
-    private IEnumerable<Documento> FilteredDocumentos => DocumentosList.Where(_quickFilter);
-    private string _searchString;
-
-    private Func<Documento, bool> _quickFilter => x =>
-    {
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
-
-        if (x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        return false;
-    };
-
-    protected override Task OnInitializedAsync()
-    {
-        DocumentosList = DocumentoService.GetDocumentos();
-        return Task.CompletedTask;
-    }
-
-    private void ApplyFilters()
-    {
-        StateHasChanged(); // Atualiza a UI para aplicar filtros
-    }
-
-    private void OnMoreVertClicked()
-    {
-        // Lógica ao clicar no ícone MoreVert
-        Console.WriteLine("Ícone MoreVert clicado!");
-    }
-}
+<MudMessageBox @ref="_mudMessageBox" Title="Atenção" CancelText="Desistir">
+    <MessageContent>
+        Tem certeza que deseja cancelar este documento? Esta ação não poderá ser desfeita.
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Cancelar!</MudButton>
+    </YesButton>
+</MudMessageBox>
