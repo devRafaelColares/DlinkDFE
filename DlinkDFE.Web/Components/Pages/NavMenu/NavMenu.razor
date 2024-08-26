@@ -1,5 +1,6 @@
+@inherits NavMenuBase
 
 <MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Início</MudNavLink>
-    <MudNavLink Href="/documentos">Documentos Emitidos</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.Home" Href="/" Match="NavLinkMatch.All" OnClick="CloseDrawer">Início</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.Description" Href="/documentos" OnClick="CloseDrawer">Documentos Emitidos</MudNavLink>
 </MudNavMenu>

@@ -1,44 +1,38 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider 
-@ref="_mudThemeProvider" />
+<MudThemeProvider @ref="_mudThemeProvider" />
 <MudSnackbarProvider />
 <MudDialogProvider />
 
 <MudLayout>
-    <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu"
-         OnClick="ToggleDrawer"
-          Color="Color.Inherit"
-          Edge="Edge.Start"/>
-            LOGOMARCA
-        <MudSpacer />
+<MudAppBar Color="Color.Primary">
+<MudIconButton Icon="@Icons.Material.Filled.Menu"
+OnClick="ToggleDrawer"
+Color="Color.Inherit"
+Edge="Edge.Start" />
+LOGOMARCA
 
-        <MudChip T="string">
-            <AvatarContent>
-                <MudAvatar>
-                    <MudImage Src="images/toiletvisit.jpg"></MudImage>
-                </MudAvatar>
-            </AvatarContent>
-            <ChildContent>Usuário</ChildContent>
-        </MudChip>
+<MudSpacer />
+<MudChip T="string">
+<AvatarContent>
+<MudAvatar>
+<MudImage Src="images/toiletvisit.jpg"></MudImage>
+</MudAvatar>
+</AvatarContent>
+<ChildContent>Usuário</ChildContent>
+</MudChip>
 
+<MudIconButton Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Inherit" />
+<MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
+</MudAppBar>
 
-    </MudAppBar>
-    <MudDrawer @bind-Open="@_isDrawerOpened">
-        <NavMenu />
-    </MudDrawer>
-    <MudMainContent>
-        <MudContainer>
-            @Body
-        </MudContainer>
-    </MudMainContent>
+<MudDrawer @bind-Open="@_isDrawerOpened" Elevation="2" Variant="DrawerVariant.Temporary">
+<NavMenu OnMenuItemClick="CloseDrawer" />
+</MudDrawer>
+
+<MudMainContent>
+<MudContainer>
+@Body
+</MudContainer>
+</MudMainContent>
 </MudLayout>
-
-@code {
-    private bool _isDrawerOpened = false;
-    private MudThemeProvider _mudThemeProvider = null!;
-
-    private void ToggleDrawer()
-        => _isDrawerOpened = !_isDrawerOpened;
-}
