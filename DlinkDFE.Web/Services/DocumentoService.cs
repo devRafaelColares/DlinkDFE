@@ -4,9 +4,9 @@ namespace DlinkDFE.Web.Services
 {
     public class DocumentoService
     {
-        public List<Documento> GetDocumentos()
+        public List<Documento> GetDocumentosAsync()
         {
-            return DocumentosMockData.GetDocumentos();
+            return DocumentosMockData.GetDocumentosAsync();
         }
     }
 }

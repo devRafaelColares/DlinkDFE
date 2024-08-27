@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components;
 using DlinkDFE.Web.Services;
 using MudBlazor;
 using DlinkDFE.Web.MockData;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace DlinkDFE.Web.Components.Pages.Documentos
 {
@@ -22,34 +24,19 @@ namespace DlinkDFE.Web.Components.Pages.Documentos
             "Autorizado", "Pendente", "Inutilizado", "Cancelado", "Rejeitado"
         };
 
-        protected override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
-            DocumentosList = DocumentoService.GetDocumentos();
-            return Task.CompletedTask;
-        }
-
-        protected void ApplyFilters()
-        {
-            StateHasChanged(); // Atualiza a UI para aplicar filtros
+            DocumentosList = DocumentoService.GetDocumentosAsync();
         }
 
         private IEnumerable<Documento> ApplyFilter(IEnumerable<Documento> documentos)
         {
-            var filtered = documentos;
-
-            if (!string.IsNullOrWhiteSpace(_searchString))
-            {
-                filtered = filtered.Where(x => x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
-                                            || x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
-                                            || x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase));
-            }
-
-            if (_selectedStatuses.Any())
-            {
-                filtered = filtered.Where(x => _selectedStatuses.Contains(x.Status));
-            }
-
-            return filtered;
+            return documentos
+                .Where(x => string.IsNullOrWhiteSpace(_searchString) || 
+                            x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+                            x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+                            x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                .Where(x => !_selectedStatuses.Any() || _selectedStatuses.Contains(x.Status));
         }
 
         protected async Task ShowCancelConfirmation()
@@ -61,7 +48,7 @@ namespace DlinkDFE.Web.Components.Pages.Documentos
                 // Pode incluir uma chamada para o serviço DocumentoService para realizar o cancelamento
                 // e/ou atualizar a lista DocumentosList
                 DocumentosList = DocumentosList.Where(d => d.Status != "Cancelado").ToList();
-                ApplyFilters();
+                StateHasChanged(); // Atualiza a UI para refletir mudanças na lista de documentos
             }
         }
     }

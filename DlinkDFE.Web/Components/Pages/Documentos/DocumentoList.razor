@@ -3,47 +3,56 @@
 @inherits DocumentoListBase
 
 <MudContainer Class="pt-8" Width="100%">
-    <MudGrid>
-        <MudItem xs="8">
-            <MudTextField 
-                @bind-Value="_searchString" 
-                Placeholder="Pesquisar..." 
-                Adornment="Adornment.Start"
-                AdornmentIcon="@Icons.Material.Filled.Search" 
-                Class="mt-0">
-            </MudTextField>
-        </MudItem>
+    <MudStack
+        Row="true"
+        >
+        <MudGrid>
+            <MudItem xs="8">
+                <MudTextField 
+                    Style="width: 330px;"
 
-        <MudItem xs="4">
-            <MudSelect T="string" 
-                       Label="Filtrar Status" 
-                       MultiSelection="true" 
-                       SelectedValues="@_selectedStatuses" 
-                       SelectedValuesChanged="@(values => _selectedStatuses = new HashSet<string>(values))">
-                @foreach (var status in _statusOptions)
-                {
-                    <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
+                    @bind-Value="_searchString" 
+                    Placeholder="Pesquisar..." 
+                    Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" 
+                    Class="mt-0"
+                    OnInput="@((ChangeEventArgs e) => {
+                        if (e.Value != null)
+                        {
+                            _searchString = e.Value.ToString();
+                        }
+                    })">
+                </MudTextField>
+            </MudItem>
 
-        <MudItem xs="4" class="d-flex justify-end">
-            <MudButton 
-                Variant="Variant.Filled" 
-                Color="Color.Primary" 
-                OnClick="ApplyFilters">Aplicar Filtros
-            </MudButton>
-        </MudItem>
-    </MudGrid>
+            <MudItem xs="4">
+<MudSelect T="string"
+           Placeholder="Status"
+           Variant="Variant.Outlined"
+           MultiSelection="true"
+           SelectedValues="@_selectedStatuses"
+           SelectedValuesChanged="@(values => _selectedStatuses = new HashSet<string>(values))"
+           MultiSelectionTextFunc="@(selectedItems => "Status")"
+           CloseMenuOnItemClick="false"
+           Class="mt-0">
+
+    @foreach (var status in _statusOptions)
+    {
+        <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+    }
+</MudSelect>
+
+            </MudItem>
+        </MudGrid>
+    </MudStack>
 
     <MudDataGrid Class="pa-2"
                  T="Documento" 
                  Items="@FilteredDocumentos" 
                  MultiSelection="true" 
                  Filterable="true" 
-                 QuickFilter="@_quickFilter"
                  SortMode="SortMode.Multiple"
-                 Style="width: 100%; table-layout: auto;">
+                >
         
         <Columns>
             <SelectColumn T="Documento" />

@@ -2,7 +2,7 @@ namespace DlinkDFE.Web.MockData
 {
     public static class DocumentosMockData
     {
-        public static List<Documento> GetDocumentos()
+        public static List<Documento> GetDocumentosAsync()
         {
             return new List<Documento>
             {
