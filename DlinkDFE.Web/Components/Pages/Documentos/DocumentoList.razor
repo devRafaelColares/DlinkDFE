@@ -46,20 +46,23 @@
             </MudItem>
             
             <MudItem xs="4">
-                <MudSelect T="string"
-                           Placeholder="Modelo"
-                           Variant="Variant.Outlined"
-                           Class="mt-0"
-                           @bind-Value="_selectedModel"
-                           OnChange="OnModelChanged">
-                    @{
-                        string modeloNF_e = "55";
-                        string modeloNFC_e = "65";
-                    }
-                    <MudSelectItem T="string">Limpar</MudSelectItem>
-                    <MudSelectItem T="string" Value="@modeloNF_e">@modeloNF_e</MudSelectItem>
-                    <MudSelectItem T="string" Value="@modeloNFC_e">@modeloNFC_e</MudSelectItem>
-                </MudSelect>
+<MudSelect T="string"
+           Placeholder="Modelo"
+           Variant="Variant.Outlined"
+           Class="mt-0"
+            MultiSelection="true"
+
+           SelectedValues="@_selectedModels"
+           SelectedValuesChanged="@(values => {
+               _selectedModels = new HashSet<string>(values);
+               ApplyFilters();
+           })">
+    @foreach (var model in _modelOptions)
+    {
+        <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
+    }
+</MudSelect>
+
             </MudItem>
         </MudGrid>
     </MudStack>

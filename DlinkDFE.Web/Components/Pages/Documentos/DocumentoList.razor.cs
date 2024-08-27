@@ -17,13 +17,18 @@ namespace DlinkDFE.Web.Components.Pages.Documentos
         protected IEnumerable<Documento> FilteredDocumentos => ApplyFilter(DocumentosList);
 
         protected string _searchString;
-        protected string _selectedModel;
         protected HashSet<string> _selectedStatuses = new HashSet<string>();
+        protected HashSet<string> _selectedModels = new HashSet<string>();
         protected MudMessageBox _mudMessageBox;
 
         public string[] _statusOptions = new string[]
         {
             "Autorizado", "Pendente", "Inutilizado", "Cancelado", "Rejeitado"
+        };
+
+        public string[] _modelOptions = new string[]
+        {
+            "55", "65"
         };
 
         protected override async Task OnInitializedAsync()
@@ -38,39 +43,42 @@ namespace DlinkDFE.Web.Components.Pages.Documentos
             StateHasChanged(); // Atualiza a UI para aplicar filtros
         }
 
-        private IEnumerable<Documento> ApplyFilter(IEnumerable<Documento> documentos)
-        {
-            var filtered = documentos;
+private IEnumerable<Documento> ApplyFilter(IEnumerable<Documento> documentos)
+{
+    var filtered = documentos;
 
-            if (!string.IsNullOrWhiteSpace(_searchString))
-            {
-                filtered = filtered.Where(x => x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Modelo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Valor.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Emissao.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase));
-            }
+    if (!string.IsNullOrWhiteSpace(_searchString))
+    {
+        filtered = filtered.Where(x => x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                        || x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                        || x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                        || x.Modelo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                        || x.Valor.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                        || x.Emissao.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
 
-            if (_selectedStatuses.Any())
-            {
-                filtered = filtered.Where(x => _selectedStatuses.Contains(x.Status));
-            }
+    if (_selectedStatuses.Any())
+    {
+        filtered = filtered.Where(x => _selectedStatuses.Contains(x.Status));
+    }
 
-            if (!string.IsNullOrWhiteSpace(_selectedModel))
-            {
-                filtered = filtered.Where(x => x.Modelo.Equals(_selectedModel, StringComparison.OrdinalIgnoreCase));
-            }
+    if (_selectedModels.Any())
+    {
+        filtered = filtered.Where(x => _selectedModels.Contains(x.Modelo));
+    }
 
-            return filtered;
-        }
+    return filtered;
+}
 
-        protected async Task OnModelChanged(ChangeEventArgs e)
-        {
-            _selectedModel = e.Value?.ToString();
-            DocumentosList = DocumentoService.GetListDocumentosByModeloAsync(_selectedModel);
-            ApplyFilters();
-        }
+
+ protected async Task OnModelChanged(IEnumerable<string> selectedValues)
+{
+    _selectedModels = new HashSet<string>(selectedValues);
+    // A chamada ao serviço deve considerar a lista completa e não substituir
+    DocumentosList = DocumentoService.GetDocumentosAsync(); // Atualiza a lista completa
+    ApplyFilters(); // Aplica os filtros com a nova seleção
+}
+
 
         protected async Task ShowCancelConfirmation()
         {
