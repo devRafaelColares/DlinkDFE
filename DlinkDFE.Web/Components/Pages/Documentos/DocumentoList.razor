@@ -27,17 +27,18 @@
 
             <MudItem xs="4">
                 <MudSelect T="string"
-                           Placeholder="Status"
-                           Variant="Variant.Outlined"
-                           MultiSelection="true"
-                           SelectedValues="@_selectedStatuses"
-                           SelectedValuesChanged="@(values => {
-                               _selectedStatuses = new HashSet<string>(values);
-                               ApplyFilters();
-                           })"
-                           MultiSelectionTextFunc="@(selectedItems => "Status")"
-                           CloseMenuOnItemClick="false"
-                           Class="mt-0">
+                    Placeholder="Status"
+                    Variant="Variant.Outlined"
+                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                    MultiSelection="true"
+                    SelectedValues="@_selectedStatuses"
+                    SelectedValuesChanged="@(values => {
+                        _selectedStatuses = new HashSet<string>(values);
+                        ApplyFilters();
+                    })"
+                    MultiSelectionTextFunc="@(selectedItems => "Status")"
+                    CloseMenuOnItemClick="false"
+                    Class="mt-0">
                     @foreach (var status in _statusOptions)
                     {
                         <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
@@ -46,24 +47,37 @@
             </MudItem>
             
             <MudItem xs="4">
-<MudSelect T="string"
-           Placeholder="Modelo"
-           Variant="Variant.Outlined"
-           Class="mt-0"
-            MultiSelection="true"
-
-           SelectedValues="@_selectedModels"
-           SelectedValuesChanged="@(values => {
-               _selectedModels = new HashSet<string>(values);
-               ApplyFilters();
-           })">
-    @foreach (var model in _modelOptions)
-    {
-        <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
-    }
-</MudSelect>
-
+                <MudSelect T="string"
+                    Placeholder="Modelo"
+                    Variant="Variant.Outlined"
+                    Class="mt-0"
+                    MultiSelection="true"
+                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                    SelectedValues="@_selectedModels"
+                    SelectedValuesChanged="@(values => {
+                        _selectedModels = new HashSet<string>(values);
+                        ApplyFilters();
+                    })">
+                    @foreach (var model in _modelOptions)
+                    {
+                        <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
+                    }
+                </MudSelect>
             </MudItem>
+
+            <MudItem xs="4">
+                <MudStack>
+                        <MudMenu 
+                            Label="Número"
+                            ActivationEvent="MouseEvent.LeftClick"
+                            AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                            Variant="Variant.Outlined">
+                                <MudNumericField HideSpinButtons="true" @bind-Value="IntValue" Label="Número inicial" Variant="Variant.Text" Min="0" Max="50" />
+                                <MudNumericField HideSpinButtons="true" @bind-Value="IntValue" Label="Número final" Variant="Variant.Text" Min="0" Max="50" />
+                        </MudMenu>
+                </MudStack>
+            </MudItem>
+
         </MudGrid>
     </MudStack>
 
@@ -115,3 +129,13 @@
         <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Cancelar!</MudButton>
     </YesButton>
 </MudMessageBox>
+
+@code {
+    bool _expanded = false;
+    public int IntValue { get; set; }
+
+
+    private void OnExpandCollapseClick() {
+        _expanded = !_expanded;
+    }
+}
