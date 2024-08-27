@@ -3,45 +3,63 @@
 @inherits DocumentoListBase
 
 <MudContainer Class="pt-8" Width="100%">
-    <MudStack
-        Row="true"
-        >
+
+    <MudStack Row="true">
         <MudGrid>
             <MudItem xs="8">
                 <MudTextField 
                     Style="width: 330px;"
-
                     @bind-Value="_searchString" 
                     Placeholder="Pesquisar..." 
                     Adornment="Adornment.Start"
                     AdornmentIcon="@Icons.Material.Filled.Search" 
                     Class="mt-0"
+                    Immediate="true"
                     OnInput="@((ChangeEventArgs e) => {
                         if (e.Value != null)
                         {
                             _searchString = e.Value.ToString();
+                            ApplyFilters();
                         }
                     })">
                 </MudTextField>
             </MudItem>
 
             <MudItem xs="4">
-<MudSelect T="string"
-           Placeholder="Status"
-           Variant="Variant.Outlined"
-           MultiSelection="true"
-           SelectedValues="@_selectedStatuses"
-           SelectedValuesChanged="@(values => _selectedStatuses = new HashSet<string>(values))"
-           MultiSelectionTextFunc="@(selectedItems => "Status")"
-           CloseMenuOnItemClick="false"
-           Class="mt-0">
-
-    @foreach (var status in _statusOptions)
-    {
-        <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
-    }
-</MudSelect>
-
+                <MudSelect T="string"
+                           Placeholder="Status"
+                           Variant="Variant.Outlined"
+                           MultiSelection="true"
+                           SelectedValues="@_selectedStatuses"
+                           SelectedValuesChanged="@(values => {
+                               _selectedStatuses = new HashSet<string>(values);
+                               ApplyFilters();
+                           })"
+                           MultiSelectionTextFunc="@(selectedItems => "Status")"
+                           CloseMenuOnItemClick="false"
+                           Class="mt-0">
+                    @foreach (var status in _statusOptions)
+                    {
+                        <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            
+            <MudItem xs="4">
+                <MudSelect T="string"
+                           Placeholder="Modelo"
+                           Variant="Variant.Outlined"
+                           Class="mt-0"
+                           @bind-Value="_selectedModel"
+                           OnChange="OnModelChanged">
+                    @{
+                        string modeloNF_e = "55";
+                        string modeloNFC_e = "65";
+                    }
+                    <MudSelectItem T="string">Limpar</MudSelectItem>
+                    <MudSelectItem T="string" Value="@modeloNF_e">@modeloNF_e</MudSelectItem>
+                    <MudSelectItem T="string" Value="@modeloNFC_e">@modeloNFC_e</MudSelectItem>
+                </MudSelect>
             </MudItem>
         </MudGrid>
     </MudStack>
@@ -51,8 +69,7 @@
                  Items="@FilteredDocumentos" 
                  MultiSelection="true" 
                  Filterable="true" 
-                 SortMode="SortMode.Multiple"
-                >
+                 SortMode="SortMode.Multiple">
         
         <Columns>
             <SelectColumn T="Documento" />

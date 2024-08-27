@@ -8,5 +8,12 @@ namespace DlinkDFE.Web.Services
         {
             return DocumentosMockData.GetDocumentosAsync();
         }
+
+        public List<Documento> GetListDocumentosByModeloAsync(string modelo)
+        {
+            return DocumentosMockData.GetDocumentosAsync()
+                .Where(d => d.Modelo.Equals(modelo, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
     }
 }

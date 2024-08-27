@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using DlinkDFE.Web.Services;
 using MudBlazor;
-using DlinkDFE.Web.MockData;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using DlinkDFE.Web.MockData;
 
 namespace DlinkDFE.Web.Components.Pages.Documentos
 {
@@ -12,10 +13,11 @@ namespace DlinkDFE.Web.Components.Pages.Documentos
         [Inject]
         protected DocumentoService DocumentoService { get; set; }
 
-        protected IEnumerable<Documento> DocumentosList = new List<Documento>();
+        protected IEnumerable<Documento> DocumentosList { get; set; } = new List<Documento>();
         protected IEnumerable<Documento> FilteredDocumentos => ApplyFilter(DocumentosList);
 
         protected string _searchString;
+        protected string _selectedModel;
         protected HashSet<string> _selectedStatuses = new HashSet<string>();
         protected MudMessageBox _mudMessageBox;
 
@@ -27,16 +29,47 @@ namespace DlinkDFE.Web.Components.Pages.Documentos
         protected override async Task OnInitializedAsync()
         {
             DocumentosList = DocumentoService.GetDocumentosAsync();
+            ApplyFilters();
+        }
+
+        protected void ApplyFilters()
+        {
+            ApplyFilter(DocumentosList);
+            StateHasChanged(); // Atualiza a UI para aplicar filtros
         }
 
         private IEnumerable<Documento> ApplyFilter(IEnumerable<Documento> documentos)
         {
-            return documentos
-                .Where(x => string.IsNullOrWhiteSpace(_searchString) || 
-                            x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-                            x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-                            x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                .Where(x => !_selectedStatuses.Any() || _selectedStatuses.Contains(x.Status));
+            var filtered = documentos;
+
+            if (!string.IsNullOrWhiteSpace(_searchString))
+            {
+                filtered = filtered.Where(x => x.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                                || x.Numero.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                                || x.Destinatario.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                                || x.Modelo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                                || x.Valor.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase)
+                                                || x.Emissao.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (_selectedStatuses.Any())
+            {
+                filtered = filtered.Where(x => _selectedStatuses.Contains(x.Status));
+            }
+
+            if (!string.IsNullOrWhiteSpace(_selectedModel))
+            {
+                filtered = filtered.Where(x => x.Modelo.Equals(_selectedModel, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return filtered;
+        }
+
+        protected async Task OnModelChanged(ChangeEventArgs e)
+        {
+            _selectedModel = e.Value?.ToString();
+            DocumentosList = DocumentoService.GetListDocumentosByModeloAsync(_selectedModel);
+            ApplyFilters();
         }
 
         protected async Task ShowCancelConfirmation()
@@ -48,7 +81,7 @@ namespace DlinkDFE.Web.Components.Pages.Documentos
                 // Pode incluir uma chamada para o serviço DocumentoService para realizar o cancelamento
                 // e/ou atualizar a lista DocumentosList
                 DocumentosList = DocumentosList.Where(d => d.Status != "Cancelado").ToList();
-                StateHasChanged(); // Atualiza a UI para refletir mudanças na lista de documentos
+                ApplyFilters();
             }
         }
     }
