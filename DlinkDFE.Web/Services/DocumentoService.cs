@@ -1,36 +1,28 @@
+using DlinkDFE.Web.MockData;
 using System.Collections.Generic;
 using System.Linq;
-using DlinkDFE.Web.MockData;
+using System.Threading.Tasks;
 
 namespace DlinkDFE.Web.Services
 {
     public class DocumentoService
     {
-        public List<Documento> GetDocumentosAsync(string searchString = null, HashSet<string> statuses = null, HashSet<string> modelos = null)
+        private readonly IEnumerable<Documento> _documentos;
+
+        public DocumentoService()
         {
-            var documentos = DocumentosMockData.GetDocumentosAsync();
+            _documentos = DocumentosMockData.GetDocumentosAsync(); // Mock data source
+        }
 
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                documentos = documentos.Where(x => x.Status.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Numero.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Destinatario.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Modelo.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Valor.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                                                || x.Emissao.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
+        public Task<IEnumerable<Documento>> GetDocumentosAsync(string searchString, HashSet<string> statuses, HashSet<string> models)
+        {
+            var documentos = _documentos.Where(d =>
+                (string.IsNullOrWhiteSpace(searchString) || d.Numero.Contains(searchString, StringComparison.OrdinalIgnoreCase)) &&
+                (!statuses.Any() || statuses.Contains(d.Status)) &&
+                (!models.Any() || models.Contains(d.Modelo)))
+                .ToList();
 
-            if (statuses != null && statuses.Any())
-            {
-                documentos = documentos.Where(x => statuses.Contains(x.Status)).ToList();
-            }
-
-            if (modelos != null && modelos.Any())
-            {
-                documentos = documentos.Where(x => modelos.Contains(x.Modelo)).ToList();
-            }
-
-            return documentos;
+            return Task.FromResult(documentos.AsEnumerable());
         }
     }
 }

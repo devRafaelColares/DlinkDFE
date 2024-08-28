@@ -1,36 +1,166 @@
 ﻿@page "/documentos"
-
 @inherits DocumentoListBase
 
 <MudContainer Class="pt-8" Width="100%">
-    <MudContainer Class="pa-4" Style="background-color: #f5f5f5; border-radius: 8px;" >
-        <FilterPanel 
-            _searchString="_searchString"
-            _selectedStatuses="_selectedStatuses"
-            _selectedModels="_selectedModels"
-            _statusOptions="_statusOptions"
-            _modelOptions="_modelOptions"
-            IntValue="IntValue" />
+    <MudContainer Class="pa-4" Style="background-color: #f5f5f5; border-radius: 8px;">
+        <MudStack Row="true">
+            <MudItem xs="12" md="6">
+                <MudTextField 
+                    Style="width: 100%;"
+                    @bind-Value="_searchString" 
+                    Placeholder="Pesquisar..." 
+                    Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" 
+                    Immediate="true">
+                </MudTextField>
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudSelect T="string"
+                    Placeholder="Status"
+                    Variant="Variant.Outlined"
+                    AnchorOrigin="Origin.BottomCenter" 
+                    TransformOrigin="Origin.TopCenter"
+                    MultiSelection="true"
+                    SelectedValues="@_selectedStatuses"
+                    MultiSelectionTextFunc="@(selectedItems => selectedItems.Any() ? string.Join(", ", selectedItems) : "Status")"
+                    CloseMenuOnItemClick="false">
+                    @foreach (var status in _statusOptions)
+                    {
+                        <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            
+            <MudItem xs="12" md="6">
+                <MudSelect T="string"
+                    Placeholder="Modelo"
+                    Variant="Variant.Outlined"
+                    AnchorOrigin="Origin.BottomCenter" 
+                    TransformOrigin="Origin.TopCenter"
+                    MultiSelection="true"
+                    SelectedValues="@_selectedModels">
+                    @foreach (var model in _modelOptions)
+                    {
+                        <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="6" Class="pb-6">
+                <MudMenu 
+                    Label="Número"
+                    ActivationEvent="MouseEvent.LeftClick"
+                    AnchorOrigin="Origin.BottomCenter" 
+                    TransformOrigin="Origin.TopCenter"
+                    Variant="Variant.Outlined">
+                    <MudContainer Class="pa-4">                             
+                        <MudNumericField HideSpinButtons="true" 
+                                         @bind-Value="ValorInicial" 
+                                         Label="Número inicial" 
+                                         Variant="Variant.Text" 
+                                         Min="0" 
+                                         Max="50" />
+                        <MudNumericField HideSpinButtons="true" 
+                                         @bind-Value="ValorFinal" 
+                                         Label="Número final" 
+                                         Variant="Variant.Text" 
+                                         Min="0" 
+                                         Max="50" />
+                    </MudContainer>
+                </MudMenu>
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudButton Variant="Variant.Filled" OnClick="ResetFilters">Limpar Filtros</MudButton>
+            </MudItem>
+        </MudStack>
+    
 
         <MudDivider />
 
-        <MudStack Row="true" Class="pa-4">
-            <MudItem xs="12" md="4">
-                <MudButton OnClick="OnExpandCollapseClick">
-                    @(_expanded ? "Menos Filtros" : "Mais Filtros")
-                </MudButton>
+        <MudStack Row="true">
+            <MudItem xs="12" Class="d-flex gap-10 justify-space-between align-center">
 
-                <MudCollapse Expanded="_expanded">
-                    <FilterColapse 
-                        Expanded="_expanded"
-                        OnExpandCollapseClick="OnExpandCollapseClick"
-                        _selectedStatuses="_selectedStatuses"
-                        _statusOptions="_statusOptions"
-                        _selectedModels="_selectedModels"
-                        _modelOptions="_modelOptions"
-                        IntValue="IntValue"
-                        />
-                </MudCollapse>
+                <MudContainer>
+                    <MudSelect T="string"
+                        Placeholder="Status"
+                        Variant="Variant.Outlined"
+                        AnchorOrigin="Origin.BottomCenter" 
+                        TransformOrigin="Origin.TopCenter"
+                        MultiSelection="true"
+                        SelectedValues="@_selectedStatuses"
+                        MultiSelectionTextFunc="@(selectedItems => selectedItems.Count == 0 ? "Status" : $"{selectedItems.Count} selecionado(s)")"
+                        CloseMenuOnItemClick="false"
+                        Class="mt-0">
+                        @foreach (var status in _statusOptions)
+                        {
+                            <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudContainer>
+
+                <MudSpacer />
+                
+                <MudContainer>
+                    <MudSelect T="string"
+                        Placeholder="Modelo"
+                        Variant="Variant.Outlined"
+                        Class="mt-0"
+                        MultiSelection="true"
+                        AnchorOrigin="Origin.BottomCenter" 
+                        TransformOrigin="Origin.TopCenter"
+                        SelectedValues="@_selectedModels">
+                        @foreach (var model in _modelOptions)
+                        {
+                            <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudContainer>
+
+                <MudSpacer />
+
+            <MudItem xs="12" Class="pb-6">
+
+                    <MudContainer Class="pa-4">                             
+                        <MudNumericField HideSpinButtons="true" 
+                                         @bind-Value="ValorInicial" 
+                                         Label="Número inicial" 
+                                         Variant="Variant.Text" 
+                                         Min="0" 
+                                         Max="50" />
+                        <MudNumericField HideSpinButtons="true" 
+                                         @bind-Value="ValorFinal" 
+                                         Label="Número final" 
+                                         Variant="Variant.Text" 
+                                         Min="0" 
+                                         Max="50" />
+                    </MudContainer>
+
+            </MudItem>
+
+                <MudSpacer />
+                
+                <MudContainer Class="d-flex">
+                    <MudItem>
+                        <MudRadioGroup @bind-Value="EmissaoOuAutorizacao">
+                        <MudRadio Color="Color.Primary" Value="@("1")">Emissão</MudRadio>
+                        <MudRadio Color="Color.Primary" Value="@("2")">Autorização</MudRadio>
+
+                        </MudRadioGroup>
+
+                    </MudItem>
+                </MudContainer>
+
+                <MudSpacer />
+
+                <MudContainer Class="d-flex">
+                    <MudItem>
+                        <MudDatePicker Label="Data Inicial" @bind-Date="_initialDate" ShowToolbar="false" />
+                        <MudDatePicker Label="Data Final" @bind-Date="_finalDate" ShowToolbar="false" />
+                    </MudItem>
+                </MudContainer>
+
             </MudItem>
         </MudStack>
     </MudContainer>
@@ -78,17 +208,36 @@
         Tem certeza que deseja cancelar este documento? Esta ação não poderá ser desfeita.
     </MessageContent>
     <YesButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Cancelar!</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Cancelar</MudButton>
     </YesButton>
+    <CancelButton>
+        <MudButton Variant="Variant.Outlined">Desistir</MudButton>
+    </CancelButton>
 </MudMessageBox>
 
 @code {
-    [Parameter]
-    public bool Expanded { get; set; }
-    public bool _expanded = false;
-    public int IntValue { get; set; }
+    private MudMessageBox _mudMessageBox;
 
-    private void OnExpandCollapseClick() {
-        _expanded = !_expanded;
+
+    private DateTime? _initialDate = DateTime.Today;
+    private DateTime? _finalDate = DateTime.Today;
+
+
+    private void ResetFilters()
+    {
+        _selectedStatuses.Clear();
+        _selectedModels.Clear();
+        ValorInicial = 0;
+        ValorFinal = 0;
+    }
+    protected async Task ShowCancelConfirmation()
+    {
+        bool? result = await _mudMessageBox.ShowAsync();
+        if (result == true)
+        {
+            // Lógica para cancelar o documento
+            DocumentosList = DocumentosList.Where(d => d.Status != "Cancelado").ToList();
+            // ApplyFilters(); // Se a lógica de cancelamento requer novos filtros, use aqui
+        }
     }
 }
