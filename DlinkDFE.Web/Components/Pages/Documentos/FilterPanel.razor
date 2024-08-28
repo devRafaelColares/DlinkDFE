@@ -1,6 +1,6 @@
 @using MudBlazor
 
-<MudContainer Class="pa-4" Style="background-color: #eae4e4; border-radius: 8px;">
+<MudContainer >
     <MudStack>
         <MudGrid>
             <MudItem xs="12" md="4">
@@ -10,14 +10,8 @@
                     Placeholder="Pesquisar..." 
                     Adornment="Adornment.Start"
                     AdornmentIcon="@Icons.Material.Filled.Search" 
-                    Immediate="true"
-                    OnInput="@((ChangeEventArgs e) => {
-                        if (e.Value != null)
-                        {
-                            _searchString = e.Value.ToString();
-                            ApplyFilters();
-                        }
-                    })">
+                    Immediate="true">
+
                 </MudTextField>
             </MudItem>
 
@@ -27,10 +21,7 @@
                     Variant="Variant.Outlined"
                     MultiSelection="true"
                     SelectedValues="@_selectedStatuses"
-                    SelectedValuesChanged="@(values => {
-                        _selectedStatuses = new HashSet<string>(values);
-                        ApplyFilters();
-                    })"
+
                     MultiSelectionTextFunc="@(selectedItems => selectedItems.Any() ? string.Join(", ", selectedItems) : "Status")"
                     CloseMenuOnItemClick="false">
                     @foreach (var status in _statusOptions)
@@ -46,10 +37,8 @@
                     Variant="Variant.Outlined"
                     MultiSelection="true"
                     SelectedValues="@_selectedModels"
-                    SelectedValuesChanged="@(values => {
-                        _selectedModels = new HashSet<string>(values);
-                        ApplyFilters();
-                    })">
+
+                    >
                     @foreach (var model in _modelOptions)
                     {
                         <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
@@ -57,7 +46,7 @@
                 </MudSelect>
             </MudItem>
 
-            <MudItem xs="12">
+            <MudItem xs="12" md="4">
                 <MudMenu 
                     Label="Número"
                     ActivationEvent="MouseEvent.LeftClick"
@@ -101,7 +90,7 @@
     public IEnumerable<string> _modelOptions { get; set; } = new List<string>();
 
     [Parameter]
-    public Action ApplyFilters { get; set; }
+    public EventCallback ApplyFilters { get; set; }
 
     [Parameter]
     public int IntValue { get; set; }

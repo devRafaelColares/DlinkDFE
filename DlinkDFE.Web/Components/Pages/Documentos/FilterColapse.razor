@@ -1,7 +1,7 @@
 @inherits DocumentoListBase
 
-<MudStack>
-    <MudItem xs="12" md="6">
+<MudStack Row="true">
+    <MudItem xs="12" md="6" Class="d-flex gap-10 justify-space-between align-center">
         <MudSelect T="string"
             Placeholder="Status"
             Variant="Variant.Outlined"
@@ -9,10 +9,6 @@
             TransformOrigin="Origin.TopCenter"
             MultiSelection="true"
             SelectedValues="@_selectedStatuses"
-            SelectedValuesChanged="@(values => {
-                _selectedStatuses = new HashSet<string>(values);
-                ApplyFilters(); // Chama ApplyFilters aqui
-            })"
             MultiSelectionTextFunc="@(selectedItems => selectedItems.Count == 0 ? "Status" : $"{selectedItems.Count} selecionado(s)")"
             CloseMenuOnItemClick="false"
             Class="mt-0">
@@ -29,11 +25,7 @@
             MultiSelection="true"
             AnchorOrigin="Origin.BottomCenter" 
             TransformOrigin="Origin.TopCenter"
-            SelectedValues="@_selectedModels"
-            SelectedValuesChanged="@(values => {
-                _selectedModels = new HashSet<string>(values);
-                ApplyFilters(); // Chama ApplyFilters aqui
-            })">
+            SelectedValues="@_selectedModels">
             @foreach (var model in _modelOptions)
             {
                 <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
@@ -47,10 +39,6 @@
                 AnchorOrigin="Origin.BottomCenter" 
                 TransformOrigin="Origin.TopCenter"
                 Variant="Variant.Outlined">
-                @{
-                    int IntValue;
-                }
-                
                 <MudContainer Class="pa-4">                             
                     <MudNumericField HideSpinButtons="true" 
                                     @bind-Value="IntValue" 
@@ -68,14 +56,54 @@
             </MudMenu>
         </MudStack>
         
-        <MudRadioGroup @bind-Value="SelectedValue">
-            <MudRadio Color="Color.Primary" Value="@("1")">1</MudRadio>
-            <MudRadio Color="Color.Primary" Value="@("2")">2</MudRadio>
-            <MudRadio Color="Color.Primary" Value="@("3")">3</MudRadio>
-        </MudRadioGroup>
-        <div class="d-flex align-center">
-            <MudButton Variant="Variant.Outlined" OnClick="Reset">Reset</MudButton>
-            <MudText Class="ml-4">Selected Option: @SelectedValue</MudText>
-        </div>
+        <MudItem Class="d-inline-flex">
+            <MudRadioGroup @bind-Value="SelectedValue">
+            <MudRadio Color="Color.Primary" Value="@("1")">Emissão</MudRadio>
+            <MudRadio Color="Color.Primary" Value="@("2")">Inclusão</MudRadio>
+            <MudRadio Color="Color.Primary" Value="@("3")">Todas as datas</MudRadio>
+            <MudRadio Color="Color.Primary" Value="@("4")">Documentos recentes</MudRadio>
+            <MudRadio Color="Color.Primary" Value="@("5")">Documentos da semana</MudRadio>
+            <MudRadio Color="Color.Primary" Value="@("6")">Documentos do mês</MudRadio>
+            <MudRadio Color="Color.Primary" Value="@("7")">Personalizar datas</MudRadio>
+            </MudRadioGroup>
+            <div class="d-flex align-center">
+                <MudButton Variant="Variant.Outlined" OnClick="Reset">Limpar Filtros</MudButton>
+                <MudText Class="ml-4">Filtros Selecionados</MudText>
+            </div>
+        </MudItem>
+
     </MudItem>
 </MudStack>
+
+@code {
+    [Parameter]
+    public bool Expanded { get; set; }
+
+    [Parameter]
+    public EventCallback OnExpandCollapseClick { get; set; }
+
+    [Parameter]
+    public HashSet<string> _selectedStatuses { get; set; } = new HashSet<string>();
+
+    [Parameter]
+    public IEnumerable<string> _statusOptions { get; set; } = new List<string>();
+
+    [Parameter]
+    public HashSet<string> _selectedModels { get; set; } = new HashSet<string>();
+
+    [Parameter]
+    public IEnumerable<string> _modelOptions { get; set; } = new List<string>();
+
+    [Parameter]
+    public int IntValue { get; set; }
+
+    [Parameter]
+    public EventCallback ApplyFilters { get; set; }
+
+    public string SelectedValue { get; set; }
+
+    public void Reset()
+    {
+        SelectedValue = null;
+    }
+}

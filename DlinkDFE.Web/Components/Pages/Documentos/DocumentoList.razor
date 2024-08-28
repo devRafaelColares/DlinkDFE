@@ -3,36 +3,35 @@
 @inherits DocumentoListBase
 
 <MudContainer Class="pt-8" Width="100%">
+    <MudContainer Class="pa-4" Style="background-color: #f5f5f5; border-radius: 8px;" >
+        <FilterPanel 
+            _searchString="_searchString"
+            _selectedStatuses="_selectedStatuses"
+            _selectedModels="_selectedModels"
+            _statusOptions="_statusOptions"
+            _modelOptions="_modelOptions"
+            IntValue="IntValue" />
 
-    <FilterPanel 
-        _searchString="_searchString"
-        _selectedStatuses="_selectedStatuses"
-        _selectedModels="_selectedModels"
-        _statusOptions="_statusOptions"
-        _modelOptions="_modelOptions"
-        ApplyFilters="ApplyFilters"
-        IntValue="IntValue" />
+        <MudStack Row="true" Class="pa-4">
+            <MudItem xs="12" md="4">
+                <MudButton OnClick="OnExpandCollapseClick">
+                    @(_expanded ? "Menos Filtros" : "Mais Filtros")
+                </MudButton>
 
-    <MudStack Row="true">
-        <MudItem>
-            <MudButton OnClick="OnExpandCollapseClick">
-                @(_expanded ? "Menos Filtros" : "Mais Filtros")
-            </MudButton>
-
-            <MudCollapse Expanded="_expanded">
-                <FilterColapse 
-                    Expanded="_expanded"
-                    OnExpandCollapseClick="OnExpandCollapseClick"
-                    _selectedStatuses="_selectedStatuses"
-                    _statusOptions="_statusOptions"
-                    _selectedModels="_selectedModels"
-                    _modelOptions="_modelOptions"
-                    IntValue="IntValue"
-                    ApplyFilters="ApplyFilters" />
-            </MudCollapse>
-
-        </MudItem>
-    </MudStack>
+                <MudCollapse Expanded="_expanded">
+                    <FilterColapse 
+                        Expanded="_expanded"
+                        OnExpandCollapseClick="OnExpandCollapseClick"
+                        _selectedStatuses="_selectedStatuses"
+                        _statusOptions="_statusOptions"
+                        _selectedModels="_selectedModels"
+                        _modelOptions="_modelOptions"
+                        IntValue="IntValue"
+                        />
+                </MudCollapse>
+            </MudItem>
+        </MudStack>
+    </MudContainer>
 
     <MudDataGrid Class="pa-2"
                  T="Documento" 
@@ -82,15 +81,12 @@
 </MudMessageBox>
 
 @code {
+    [Parameter]
+    public bool Expanded { get; set; }
     public bool _expanded = false;
     public int IntValue { get; set; }
-    public string SelectedValue { get; set; }
 
     private void OnExpandCollapseClick() {
         _expanded = !_expanded;
-    }
-
-    private void Reset() {
-        SelectedValue = null;
     }
 }
