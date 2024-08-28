@@ -73,12 +73,12 @@
 
                 </MudRadioGroup>
                 <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Outlined" OnClick="Reset">Limpar Filtros</MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="Reset">Limpar Filtros</MudButton>
                     <MudText Class="ml-4">Filtros Selecionados</MudText>
                 </div>
             </MudItem>
-                <MudDatePicker Label="Data Inicial" @bind-Date="_date" ShowToolbar="false" />
-                <MudDatePicker Label="Data Final" @bind-Date="_date" ShowToolbar="false" />
+                <MudDatePicker Label="Data Inicial" @bind-Date="_initialDate" ShowToolbar="false" />
+                <MudDatePicker Label="Data Final" @bind-Date="_finalDate" ShowToolbar="false" />
 
             <MudItem>
 
@@ -90,7 +90,8 @@
 
 @code {
 
-    private DateTime? _date = DateTime.Today;
+    private DateTime? _initialDate = DateTime.Today;
+    private DateTime? _finalDate = DateTime.Today;
 
     [Parameter]
     public bool Expanded { get; set; }
