@@ -29,7 +29,8 @@
                 <MudSelect T="string"
                     Placeholder="Status"
                     Variant="Variant.Outlined"
-                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                    AnchorOrigin="Origin.BottomCenter" 
+                    TransformOrigin="Origin.TopCenter"
                     MultiSelection="true"
                     SelectedValues="@_selectedStatuses"
                     SelectedValuesChanged="@(values => {
@@ -52,7 +53,8 @@
                     Variant="Variant.Outlined"
                     Class="mt-0"
                     MultiSelection="true"
-                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                    AnchorOrigin="Origin.BottomCenter" 
+                    TransformOrigin="Origin.TopCenter"
                     SelectedValues="@_selectedModels"
                     SelectedValuesChanged="@(values => {
                         _selectedModels = new HashSet<string>(values);
@@ -67,18 +69,119 @@
 
             <MudItem xs="4">
                 <MudStack>
-                        <MudMenu 
-                            Label="Número"
-                            ActivationEvent="MouseEvent.LeftClick"
-                            AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
-                            Variant="Variant.Outlined">
-                                <MudNumericField HideSpinButtons="true" @bind-Value="IntValue" Label="Número inicial" Variant="Variant.Text" Min="0" Max="50" />
-                                <MudNumericField HideSpinButtons="true" @bind-Value="IntValue" Label="Número final" Variant="Variant.Text" Min="0" Max="50" />
-                        </MudMenu>
+                    <MudMenu 
+                        Label="Número"
+                        ActivationEvent="MouseEvent.LeftClick"
+                        AnchorOrigin="Origin.BottomCenter" 
+                        TransformOrigin="Origin.TopCenter"
+                        Variant="Variant.Outlined">
+                        <MudContainer Class="pa-4">                             
+                            <MudNumericField HideSpinButtons="true" 
+                                             @bind-Value="IntValue" 
+                                             Label="Número inicial" 
+                                             Variant="Variant.Text" 
+                                             Min="0" 
+                                             Max="50" />
+                            <MudNumericField HideSpinButtons="true" 
+                                             @bind-Value="IntValue" 
+                                             Label="Número final" 
+                                             Variant="Variant.Text" 
+                                             Min="0" 
+                                             Max="50" />
+                        </MudContainer>
+                    </MudMenu>
                 </MudStack>
             </MudItem>
-
         </MudGrid>
+    </MudStack>
+
+    <MudStack Row="true">
+        <MudItem>
+            <MudButton OnClick="OnExpandCollapseClick">
+                @(_expanded ? "Mais Filtros" : "Mais Filtros")
+            </MudButton>
+            <MudCollapse Expanded="_expanded">
+                <MudItem>
+                    <MudSelect T="string"
+                        Placeholder="Status"
+                        Variant="Variant.Outlined"
+                        AnchorOrigin="Origin.BottomCenter" 
+                        TransformOrigin="Origin.TopCenter"
+                        MultiSelection="true"
+                        SelectedValues="@_selectedStatuses"
+                        SelectedValuesChanged="@(values => {
+                            _selectedStatuses = new HashSet<string>(values);
+                            ApplyFilters();
+                        })"
+                        MultiSelectionTextFunc="@(selectedItems => "Status")"
+                        CloseMenuOnItemClick="false"
+                        Class="mt-0">
+                        @foreach (var status in _statusOptions)
+                        {
+                            <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudItem xs="4">
+                        <MudSelect T="string"
+                            Placeholder="Modelo"
+                            Variant="Variant.Outlined"
+                            Class="mt-0"
+                            MultiSelection="true"
+                            AnchorOrigin="Origin.BottomCenter" 
+                            TransformOrigin="Origin.TopCenter"
+                            SelectedValues="@_selectedModels"
+                            SelectedValuesChanged="@(values => {
+                                _selectedModels = new HashSet<string>(values);
+                                ApplyFilters();
+                            })">
+                            @foreach (var model in _modelOptions)
+                            {
+                                <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="4">
+                        <MudStack>
+                            <MudMenu 
+                                Label="Número"
+                                ActivationEvent="MouseEvent.LeftClick"
+                                AnchorOrigin="Origin.BottomCenter" 
+                                TransformOrigin="Origin.TopCenter"
+                                Variant="Variant.Outlined">
+                                <MudContainer Class="pa-4">                             
+                                    <MudNumericField HideSpinButtons="true" 
+                                                     @bind-Value="IntValue" 
+                                                     Label="Número inicial" 
+                                                     Variant="Variant.Text" 
+                                                     Min="0" 
+                                                     Max="50" />
+                                    <MudNumericField HideSpinButtons="true" 
+                                                     @bind-Value="IntValue" 
+                                                     Label="Número final" 
+                                                     Variant="Variant.Text" 
+                                                     Min="0" 
+                                                     Max="50" />
+                                </MudContainer>
+                            </MudMenu>
+                        </MudStack>
+                    </MudItem>
+
+                    <MudItem xs="12" md="6">
+                        <MudRadioGroup @bind-Value="SelectedValue">
+                            <MudRadio Color="Color.Primary" Value="@("1")">1</MudRadio>
+                            <MudRadio Color="Color.Primary" Value="@("2")">2</MudRadio>
+                            <MudRadio Color="Color.Primary" Value="@("3")">3</MudRadio>
+                        </MudRadioGroup>
+                        <div class="d-flex align-center">
+                            <MudButton Variant="Variant.Outlined" OnClick="Reset">Reset</MudButton>
+                            <MudText Class="ml-4">Selected Option: @SelectedValue</MudText>
+                        </div>
+                    </MudItem>
+                </MudItem>
+            </MudCollapse>
+        </MudItem>
     </MudStack>
 
     <MudDataGrid Class="pa-2"
@@ -87,7 +190,6 @@
                  MultiSelection="true" 
                  Filterable="true" 
                  SortMode="SortMode.Multiple">
-        
         <Columns>
             <SelectColumn T="Documento" />
             <PropertyColumn Property="x => x.Status" Title="Status" />
@@ -97,7 +199,6 @@
             <PropertyColumn Property="x => x.Emissao" Title="Emissão" />
             <PropertyColumn Property="x => x.Destinatario" Title="Destinatário" />
             <PropertyColumn Property="x => x.Valor" Title="Valor" />
-
             <TemplateColumn Title="Ações" Icon="@Icons.Material.Filled.MoreVert">
                 <CellTemplate>
                     <MudMenu  
@@ -133,9 +234,13 @@
 @code {
     bool _expanded = false;
     public int IntValue { get; set; }
-
+    public string SelectedValue { get; set; }
 
     private void OnExpandCollapseClick() {
         _expanded = !_expanded;
+    }
+
+    private void Reset() {
+        SelectedValue = null;
     }
 }
