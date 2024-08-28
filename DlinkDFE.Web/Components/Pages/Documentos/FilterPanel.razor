@@ -1,0 +1,108 @@
+@using MudBlazor
+
+<MudContainer Class="pa-4" Style="background-color: #eae4e4; border-radius: 8px;">
+    <MudStack>
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudTextField 
+                    Style="width: 100%;"
+                    @bind-Value="_searchString" 
+                    Placeholder="Pesquisar..." 
+                    Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" 
+                    Immediate="true"
+                    OnInput="@((ChangeEventArgs e) => {
+                        if (e.Value != null)
+                        {
+                            _searchString = e.Value.ToString();
+                            ApplyFilters();
+                        }
+                    })">
+                </MudTextField>
+            </MudItem>
+
+            <MudItem xs="12" md="4">
+                <MudSelect T="string"
+                    Placeholder="Status"
+                    Variant="Variant.Outlined"
+                    MultiSelection="true"
+                    SelectedValues="@_selectedStatuses"
+                    SelectedValuesChanged="@(values => {
+                        _selectedStatuses = new HashSet<string>(values);
+                        ApplyFilters();
+                    })"
+                    MultiSelectionTextFunc="@(selectedItems => selectedItems.Any() ? string.Join(", ", selectedItems) : "Status")"
+                    CloseMenuOnItemClick="false">
+                    @foreach (var status in _statusOptions)
+                    {
+                        <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            
+            <MudItem xs="12" md="4">
+                <MudSelect T="string"
+                    Placeholder="Modelo"
+                    Variant="Variant.Outlined"
+                    MultiSelection="true"
+                    SelectedValues="@_selectedModels"
+                    SelectedValuesChanged="@(values => {
+                        _selectedModels = new HashSet<string>(values);
+                        ApplyFilters();
+                    })">
+                    @foreach (var model in _modelOptions)
+                    {
+                        <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudMenu 
+                    Label="Número"
+                    ActivationEvent="MouseEvent.LeftClick"
+                    AnchorOrigin="Origin.BottomCenter" 
+                    TransformOrigin="Origin.TopCenter"
+                    Variant="Variant.Outlined">
+                    <MudContainer Class="pa-4">                             
+                        <MudNumericField HideSpinButtons="true" 
+                                         @bind-Value="IntValue" 
+                                         Label="Número inicial" 
+                                         Variant="Variant.Text" 
+                                         Min="0" 
+                                         Max="50" />
+                        <MudNumericField HideSpinButtons="true" 
+                                         @bind-Value="IntValue" 
+                                         Label="Número final" 
+                                         Variant="Variant.Text" 
+                                         Min="0" 
+                                         Max="50" />
+                    </MudContainer>
+                </MudMenu>
+            </MudItem>
+        </MudGrid>
+    </MudStack>
+</MudContainer>
+
+@code {
+    [Parameter]
+    public string _searchString { get; set; }
+
+    [Parameter]
+    public HashSet<string> _selectedStatuses { get; set; } = new HashSet<string>();
+
+    [Parameter]
+    public HashSet<string> _selectedModels { get; set; } = new HashSet<string>();
+
+    [Parameter]
+    public IEnumerable<string> _statusOptions { get; set; } = new List<string>();
+
+    [Parameter]
+    public IEnumerable<string> _modelOptions { get; set; } = new List<string>();
+
+    [Parameter]
+    public Action ApplyFilters { get; set; }
+
+    [Parameter]
+    public int IntValue { get; set; }
+}
