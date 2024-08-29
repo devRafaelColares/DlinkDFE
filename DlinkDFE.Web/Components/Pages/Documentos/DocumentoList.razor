@@ -1,7 +1,7 @@
 ﻿@page "/documentos"
 @inherits DocumentoListBase
 
-<MudContainer Class="pt-8" Width="100%">
+<MudContainer Class="pt-8" Style="width: 100%;">
     <MudContainer Class="pa-4" Style="background-color: #f5f5f5; border-radius: 8px;">
         <MudContainer Class="pb-4">
         <MudStack Row="true">
@@ -77,7 +77,7 @@
             </MudItem>
         </MudStack>
         <MudButton OnClick="OnExpandCollapseClick" EndIcon="@(_expanded ? Icons.Material.Filled.ArrowDropUp : Icons.Material.Filled.ArrowDropDown)">
-    @(_expanded ? "Menos filtros" : "Mais filtros")
+            @(_expanded ? "Menos filtros" : "Mais filtros")
         </MudButton>
 
         </MudContainer>
@@ -184,21 +184,22 @@
         </MudStack>
     </MudContainer>
 
+<div>
     <MudDataGrid Class="pa-2"
-                 T="Documento" 
-                 Items="@FilteredDocumentos" 
-                 MultiSelection="true" 
-                 Filterable="true" 
-                 SortMode="SortMode.Multiple">
+                T="Documento" 
+                Items="@FilteredDocumentos" 
+                MultiSelection="true" 
+                Filterable="true" 
+                SortMode="SortMode.Multiple">
         <Columns>
-            <SelectColumn T="Documento" />
-            <PropertyColumn Property="x => x.Status" Title="Status" />
-            <PropertyColumn Property="x => x.Modelo" Title="Modelo" />
-            <PropertyColumn Property="x => x.Numero" Title="Número" />
-            <PropertyColumn Property="x => x.Serie" Title="Série" />
-            <PropertyColumn Property="x => x.Emissao" Title="Emissão" />
-            <PropertyColumn Property="x => x.Destinatario" Title="Destinatário" />
-            <PropertyColumn Property="x => x.Valor" Title="Valor" />
+            <SelectColumn T="Documento"/>
+            <PropertyColumn Property="x => x.Status" Title="Status" Class="mudtablecell"/>
+            <PropertyColumn Property="x => x.Modelo" Title="Modelo" Class="mudtablecell"/>
+            <PropertyColumn Property="x => x.Numero" Title="Número" Class="mudtablecell"/>
+            <PropertyColumn Property="x => x.Serie" Title="Série" Class="mudtablecell"/>
+            <PropertyColumn Property="x => x.Emissao" Title="Emissão" Class="mudtablecell"/>
+            <PropertyColumn Property="x => x.Destinatario" Title="Destinatário" Class="mudtablecell"/>
+            <PropertyColumn Property="x => x.Valor" Title="Valor" Class="mudtablecell"/>
             <TemplateColumn Title="Ações" Icon="@Icons.Material.Filled.MoreVert">
                 <CellTemplate>
                     <MudMenu  
@@ -220,6 +221,8 @@
             <MudDataGridPager T="Documento" />
         </PagerContent>
     </MudDataGrid>
+</div>
+
 </MudContainer>
 
 <MudMessageBox @ref="_mudMessageBox" Title="Atenção" CancelText="Desistir">
@@ -265,4 +268,19 @@
             // ApplyFilters(); // Se a lógica de cancelamento requer novos filtros, use aqui
         }
     }
+
+
+    //CSS
+    @* MudTheme MyCustomTheme = new MudTheme()
+    {
+ 
+        PseudoCss = new PseudoCss()
+        {
+            // Estilo personalizado para mud-table-cell
+            [":root"] = new Dictionary<string, string>
+            {
+                { ".mud-table-cell": "padding: 4px !important; max-width: 100px; text-align: center; overflow: hidden; white-space: nowrap;" }
+            }
+        }
+    }; *@
 }
