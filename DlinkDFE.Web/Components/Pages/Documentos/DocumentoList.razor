@@ -3,6 +3,7 @@
 
 <MudContainer Class="pt-8" Width="100%">
     <MudContainer Class="pa-4" Style="background-color: #f5f5f5; border-radius: 8px;">
+        <MudContainer Class="pb-4">
         <MudStack Row="true">
             <MudItem xs="12" md="6">
                 <MudTextField 
@@ -47,14 +48,14 @@
                 </MudSelect>
             </MudItem>
 
-            <MudItem xs="12" md="6" Class="pb-6">
+            <MudItem xs="12" md="6" Class="pt-2">
                 <MudMenu 
-                    Label="Número"
+                    Label="Número de NF"
                     ActivationEvent="MouseEvent.LeftClick"
                     AnchorOrigin="Origin.BottomCenter" 
                     TransformOrigin="Origin.TopCenter"
                     Variant="Variant.Outlined">
-                    <MudContainer Class="pa-4">                             
+                    <MudContainer Class="pt-4">                             
                         <MudNumericField HideSpinButtons="true" 
                                          @bind-Value="ValorInicial" 
                                          Label="Número inicial" 
@@ -71,97 +72,115 @@
                 </MudMenu>
             </MudItem>
 
-            <MudItem xs="12" md="6">
+            <MudItem xs="12" md="6" Class="pt-2">
                 <MudButton Variant="Variant.Filled" OnClick="ResetFilters">Limpar Filtros</MudButton>
             </MudItem>
         </MudStack>
+        <MudButton OnClick="OnExpandCollapseClick" EndIcon="@(_expanded ? Icons.Material.Filled.ArrowDropUp : Icons.Material.Filled.ArrowDropDown)">
+    @(_expanded ? "Menos filtros" : "Mais filtros")
+        </MudButton>
+
+        </MudContainer>
     
 
         <MudDivider />
 
-        <MudStack Row="true">
-            <MudItem xs="12" Class="d-flex gap-10 justify-space-between align-center">
+        <MudStack Row="true" Class="pt-4">
 
-                <MudContainer>
-                    <MudSelect T="string"
-                        Placeholder="Status"
-                        Variant="Variant.Outlined"
-                        AnchorOrigin="Origin.BottomCenter" 
-                        TransformOrigin="Origin.TopCenter"
-                        MultiSelection="true"
-                        SelectedValues="@_selectedStatuses"
-                        MultiSelectionTextFunc="@(selectedItems => selectedItems.Count == 0 ? "Status" : $"{selectedItems.Count} selecionado(s)")"
-                        CloseMenuOnItemClick="false"
-                        Class="mt-0">
-                        @foreach (var status in _statusOptions)
-                        {
-                            <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudContainer>
-
-                <MudSpacer />
-                
-                <MudContainer>
-                    <MudSelect T="string"
-                        Placeholder="Modelo"
-                        Variant="Variant.Outlined"
-                        Class="mt-0"
-                        MultiSelection="true"
-                        AnchorOrigin="Origin.BottomCenter" 
-                        TransformOrigin="Origin.TopCenter"
-                        SelectedValues="@_selectedModels">
-                        @foreach (var model in _modelOptions)
-                        {
-                            <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudContainer>
-
-                <MudSpacer />
-
-            <MudItem xs="12" Class="pb-6">
-
-                    <MudContainer Class="pa-4">                             
-                        <MudNumericField HideSpinButtons="true" 
-                                         @bind-Value="ValorInicial" 
-                                         Label="Número inicial" 
-                                         Variant="Variant.Text" 
-                                         Min="0" 
-                                         Max="50" />
-                        <MudNumericField HideSpinButtons="true" 
-                                         @bind-Value="ValorFinal" 
-                                         Label="Número final" 
-                                         Variant="Variant.Text" 
-                                         Min="0" 
-                                         Max="50" />
+            <MudCollapse Expanded="_expanded">              
+                <MudItem xs="12" Class="d-flex">
+                    <MudContainer>
+                        <MudContainer Class="pt-2">
+                            <MudTextField @bind-Value="CNPJ_CPF" Placeholder="CNPJ/CPF" Variant="Variant.Outlined"></MudTextField>
+                        </MudContainer>
                     </MudContainer>
 
-            </MudItem>
+                    <MudContainer>
+                        <MudContainer>  
+                            <MudContainer Class="pt-2">
+                                <MudSelect T="string"
+                                    Placeholder="Status"
+                                    Variant="Variant.Outlined"
+                                    AnchorOrigin="Origin.BottomCenter" 
+                                    TransformOrigin="Origin.TopCenter"
+                                    MultiSelection="true"
+                                    SelectedValues="@_selectedStatuses"
+                                    MultiSelectionTextFunc="@(selectedItems => selectedItems.Count == 0 ? "Status" : $"{selectedItems.Count} selecionado(s)")"
+                                    CloseMenuOnItemClick="false"
+                                    Class="mt-0">
+                                    @foreach (var status in _statusOptions)
+                                    {
+                                        <MudSelectItem T="string" Value="@status">@status</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudContainer>
 
-                <MudSpacer />
-                
-                <MudContainer Class="d-flex">
-                    <MudItem>
-                        <MudRadioGroup @bind-Value="EmissaoOuAutorizacao">
-                        <MudRadio Color="Color.Primary" Value="@("1")">Emissão</MudRadio>
-                        <MudRadio Color="Color.Primary" Value="@("2")">Autorização</MudRadio>
+                            <MudSpacer />
+                            
+                            <MudContainer Class="pt-2">
+                                <MudSelect T="string"
+                                    Placeholder="Modelo"
+                                    Variant="Variant.Outlined"
+                                    Class="mt-0"
+                                    MultiSelection="true"
+                                    AnchorOrigin="Origin.BottomCenter" 
+                                    TransformOrigin="Origin.TopCenter"
+                                    SelectedValues="@_selectedModels">
+                                    @foreach (var model in _modelOptions)
+                                    {
+                                        <MudSelectItem T="string" Value="@model">@model</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudContainer>                        
+                        </MudContainer>
+                        
+                    </MudContainer>
 
-                        </MudRadioGroup>
 
+                    <MudItem xs="12" Class="pb-2">
+
+                        <MudContainer Class="pa-4">                             
+                            <MudNumericField HideSpinButtons="true" 
+                                            @bind-Value="ValorInicial" 
+                                            Label="Número inicial" 
+                                            Variant="Variant.Text" 
+                                            Min="0" 
+                                            Max="50" />
+                            <MudNumericField HideSpinButtons="true" 
+                                            @bind-Value="ValorFinal" 
+                                            Label="Número final" 
+                                            Variant="Variant.Text" 
+                                            Min="0" 
+                                            Max="50" />
+                        </MudContainer>
                     </MudItem>
-                </MudContainer>
 
-                <MudSpacer />
+                    <MudSpacer />
+                    
+                    <MudContainer>
 
-                <MudContainer Class="d-flex">
-                    <MudItem>
-                        <MudDatePicker Label="Data Inicial" @bind-Date="_initialDate" ShowToolbar="false" />
-                        <MudDatePicker Label="Data Final" @bind-Date="_finalDate" ShowToolbar="false" />
-                    </MudItem>
-                </MudContainer>
+                        <MudContainer Class="d-flex">
+                            <MudItem>
+                                <MudRadioGroup @bind-Value="EmissaoOuAutorizacao">
+                                <MudRadio Color="Color.Primary" Value="@("1")">Emissão</MudRadio>
+                                <MudRadio Color="Color.Primary" Value="@("2")">Autorização</MudRadio>
 
-            </MudItem>
+                                </MudRadioGroup>
+
+                            </MudItem>
+                        </MudContainer>
+
+
+                        <MudContainer Class="d-flex pt-2">
+                            <MudItem>
+                                <MudDatePicker Label="Data Inicial" @bind-Date="_initialDate" ShowToolbar="false" />
+                                <MudDatePicker Label="Data Final" @bind-Date="_finalDate" ShowToolbar="false" />
+                            </MudItem>
+                        </MudContainer>
+                    </MudContainer>
+
+                </MudItem>
+            </MudCollapse>
         </MudStack>
     </MudContainer>
 
@@ -218,9 +237,15 @@
 @code {
     private MudMessageBox _mudMessageBox;
 
-
+    public string CNPJ_CPF { get; set; }
     private DateTime? _initialDate = DateTime.Today;
     private DateTime? _finalDate = DateTime.Today;
+
+    bool _expanded = false;
+
+    private void OnExpandCollapseClick() {
+        _expanded = !_expanded;
+    }
 
 
     private void ResetFilters()
